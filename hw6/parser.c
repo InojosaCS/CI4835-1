@@ -6,7 +6,7 @@
 
 #define TRUE 1
 #define FALSE 0
-#define FAIL -251199
+#define NF -251199
 #define debug printf("Aqui\n")
 
 // The is_number function checks if the string passed as a parameter is a number.

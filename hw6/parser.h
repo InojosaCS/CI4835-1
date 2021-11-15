@@ -6,7 +6,7 @@
 
 #define TRUE 1
 #define FALSE 0
-#define FAIL -251199
+#define NF -251199
 #define debug printf("Aqui\n")
 
 int is_number(char * str);
