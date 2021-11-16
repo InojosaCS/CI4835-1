@@ -22,6 +22,7 @@ void calc_destroy(struct Calc **calc) {
 The calc_eval function evaluates an expression stored as a C character string in expr, saving the result of evaluating the expression in the variable pointed to by result. If the evaluation succeeds, calc_eval should return 1. If the evaluation fails because expr is invalid, calc_eval should return 0.
 */
 int calc_eval(struct Calc *calc, const char *expr, int *result){
+	printf("%s\n", expr);
 	char splittedExpr[5][26] = {"-", "-", "-", "-", "-"};
 	int i = 0, j = 0, pos = 0;
 
@@ -42,11 +43,8 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 		if(strcmp(splittedExpr[i], "-") == 0) null++;
 	}
 
-
 	// Operand
 	if(is_operand(splittedExpr[0]) && (null == 4)) {
-		puts("Operand");
-
 		if(is_number(splittedExpr[0])) {
 			*result = string_to_int(splittedExpr[0]);
 			return *result;
@@ -65,13 +63,34 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 
 	// operand op operand
 	if(is_variable(splittedExpr[0]) && is_op(splittedExpr[1]) && is_operand(splittedExpr[2]) && (null == 2)) {
-		puts("operand op operand");
-	}
+		int operand1 = NF;
+		int operand2 = NF;
 
+		if(is_number(splittedExpr[0])) operand1 = string_to_int(splittedExpr[0]);
+		if(is_number(splittedExpr[2])) operand2 = string_to_int(splittedExpr[2]);
+		if(hash_lookup(calc->table, splittedExpr[0]) != NF) operand1 = hash_lookup(calc->table, splittedExpr[0]);
+		if(hash_lookup(calc->table, splittedExpr[2]) != NF) operand2 = hash_lookup(calc->table, splittedExpr[2]);
+	
+		if(operand1 == NF || operand2 == NF) {
+			*result = FALSE;
+			return FALSE;
+		}
+
+		if(strcmp(splittedExpr[1], "/") == 0 && operand2 == 0) {
+			*result = FALSE;
+			return FALSE;
+		}
+
+		if(strcmp(splittedExpr[1], "+") == 0) *result = operand1 + operand2;
+		if(strcmp(splittedExpr[1], "-") == 0) *result = operand1 - operand2;
+		if(strcmp(splittedExpr[1], "*") == 0) *result = operand1 * operand2;
+		if(strcmp(splittedExpr[1], "/") == 0) *result = operand1 / operand2;
+
+		return *result;
+	}
 
 	// var = operand 
 	if(is_variable(splittedExpr[0]) && is_equal(splittedExpr[1]) && is_operand(splittedExpr[2]) && (null == 2)) {
-		puts("var = operand");
 		int op2 = NF;
 
 		//getting the value of op2
@@ -91,25 +110,42 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 	// var = operand op operand
 	if(is_operand(splittedExpr[0]) && is_equal(splittedExpr[1]) 
 		&& is_operand(splittedExpr[2]) && is_op(splittedExpr[3]) && is_operand(splittedExpr[4]) ) {
-			puts("var = operand op operand");
+		int operand1 = NF;
+		int operand2 = NF;
+
+		if(is_number(splittedExpr[4])) operand1 = string_to_int(splittedExpr[4]);
+		if(is_number(splittedExpr[2])) operand2 = string_to_int(splittedExpr[2]);
+		if(hash_lookup(calc->table, splittedExpr[4]) != NF) operand1 = hash_lookup(calc->table, splittedExpr[4]);
+		if(hash_lookup(calc->table, splittedExpr[2]) != NF) operand2 = hash_lookup(calc->table, splittedExpr[2]);
+	
+		if(operand1 == NF || operand2 == NF) {
+			*result = FALSE;
+			return FALSE;
+		}
+
+		if(strcmp(splittedExpr[3], "/") == 0 && operand2 == 0) {
+			*result = FALSE;
+			return FALSE;
+		}
+
+		if(strcmp(splittedExpr[3], "+") == 0) *result = operand1 + operand2;
+		if(strcmp(splittedExpr[3], "-") == 0) *result = operand1 - operand2;
+		if(strcmp(splittedExpr[3], "*") == 0) *result = operand1 * operand2;
+		if(strcmp(splittedExpr[3], "/") == 0) *result = operand1 / operand2;
+
+
+		hash_delete(calc->table, splittedExpr[0]);
+		hash_insert(calc->table, splittedExpr[0], *result);
+		return *result;
 	}
 
-	return *result;
-}
-
-void calc_print(struct Calc *calc, const char * key, int val) {
-	hash_insert(calc->table, key, val);
+	return FALSE;
 }
 
 int main(int argc, char *argv[]) {
 //	struct Calc *calc = calc_create();
 	struct Calc *calc = calc_create();
-	calc_print(calc, "a", 1);
-	calc_print(calc, "b", 2);
-	calc_print(calc, "c", 3);
-	int a = hash_lookup(calc->table, "a");
-	int b = hash_lookup(calc->table, "b");
-	int c = hash_lookup(calc->table, "c");
+
 	int result = 0;
 
 	calc_eval(calc, "42", &result);
@@ -117,10 +153,7 @@ int main(int argc, char *argv[]) {
 	calc_eval(calc, "hola = 41", &result);
 	printf("%d\n", result);
 	calc_eval(calc, "hola", &result);
-
 	printf("%d\n", result);
-	printf("%d %d %d\n", a, b, c);
-
-
-
+	calc_eval(calc, "hola = hola + 7", &result);
+	printf("%d\n", result);
 }
