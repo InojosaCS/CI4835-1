@@ -32,7 +32,7 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 
 	int i = 0, j = 0, pos = 0;
 
-	for(i = 0; i <= strlen(expr); i++) {
+	for(i = 0; i <= (int) strlen(expr); i++) {
 		if(expr[i] == '\0' || expr[i] == ' ' || expr[i] == '\n') {
 			//splittedExpr[pos][j] = '\0';
 			pos++;
@@ -122,7 +122,7 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 	}
 
 	// var = operand op operand
-	if(is_operand(splittedExpr[0]) && is_equal(splittedExpr[1]) 
+	if(is_variable(splittedExpr[0]) && is_equal(splittedExpr[1]) 
 		&& is_operand(splittedExpr[2]) && is_op(splittedExpr[3]) && is_operand(splittedExpr[4]) ) {
 		
 		int operand1 = NF;
