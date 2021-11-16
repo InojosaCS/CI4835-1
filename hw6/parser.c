@@ -53,6 +53,7 @@ int string_to_int(char * str) {
 	
 	return number;
 }
+
 int is_op(char * str) {
 	return strcmp(str, "+") == 0 || strcmp(str, "-") == 0 || strcmp(str, "*") == 0 || strcmp(str, "/") == 0;
 }

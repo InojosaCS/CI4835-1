@@ -60,7 +60,6 @@ static int hash(const hash_t *tptr, const char *key) {
  *  buckets: The number of initial buckets to create
  */
 VMDEXTERNSTATIC void hash_init(hash_t *tptr, int buckets) {
-  puts("hash_init");
   /* make sure we allocate something */
   if (buckets==0)
     buckets=16;
