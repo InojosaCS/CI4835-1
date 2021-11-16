@@ -14,7 +14,7 @@ int is_number(char * str) {
 	int i = 0;
 	int is_number = TRUE;
 	
-	while(str[i] != '\0') {
+	while(str[i] != '\0' && str[i] != '\n') {
 		if(!isdigit(str[i])) {
 			is_number = FALSE;
 			break;
@@ -30,7 +30,7 @@ int is_variable(char * str){
 	int i = 0;
 	int is_variable = TRUE;
 	
-	while(str[i] != '\0') {
+	while(str[i] != '\0' && str[i] != '\n') {
 		if(!isalpha(str[i])) {
 			is_variable = FALSE;
 			break;

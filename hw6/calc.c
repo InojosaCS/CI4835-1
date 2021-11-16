@@ -26,13 +26,14 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 	//printf("%s\n", expr);
 	char (*splittedExpr[5]);
 	for(int i = 0; i < 5; i++) {
-		splittedExpr[i] = (char *) malloc(sizeof(char) * 10);
+		splittedExpr[i] = (char *) malloc(sizeof(char) * 16);
+		splittedExpr[i][0] = '\0';
 	}
 
 	int i = 0, j = 0, pos = 0;
 
 	for(i = 0; i <= strlen(expr); i++) {
-		if(expr[i] == '\0' || expr[i] == ' ') {
+		if(expr[i] == '\0' || expr[i] == ' ' || expr[i] == '\n') {
 			//splittedExpr[pos][j] = '\0';
 			pos++;
 			j = 0;
@@ -45,7 +46,6 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 	int null = 0;
 
 	for(i = 0; i < 5; i++) {
-		//printf("%s\n", splittedExpr[i]);
 		if(strcmp(splittedExpr[i], "") == 0) null++;
 	}
 
@@ -117,7 +117,7 @@ int calc_eval(struct Calc *calc, const char *expr, int *result){
 
 		hash_delete(calc->table, splittedExpr[0]);
 		hash_insert(calc->table, splittedExpr[0], op2);
-		printf("%s = %d\n", splittedExpr[0], op2);
+		//printf("%s = %d\n", splittedExpr[0], op2);
 		return *result = op2;
 	}
 

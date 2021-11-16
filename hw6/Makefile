@@ -24,14 +24,14 @@ all : $(PROGRAMS)
 solution.zip :
 	zip -9r solution.zip *.c *.cpp *.h Makefile
 
-calcTest : calcTest.o calc.o tctest.o
-	$(CXX) -o $@ calcTest.o calc.o tctest.o
+calcTest : calcTest.o calc.o tctest.o parser.o hash.o
+	$(CXX) -o $@ calcTest.o calc.o tctest.o parser.o hash.o
 
-calcInteractive : calcInteractive.o calc.o csapp.o
-	$(CXX) -o $@ calcInteractive.o calc.o csapp.o -lpthread
+calcInteractive : calcInteractive.o calc.o csapp.o parser.o hash.o
+	$(CXX) -o $@ calcInteractive.o calc.o csapp.o parser.o hash.o -lpthread
 
-calcServer : calcServer.o calc.o csapp.o
-	$(CXX) -o $@ calcServer.o calc.o csapp.o -lpthread
+calcServer : calcServer.o calc.o csapp.o parser.o hash.o
+	$(CXX) -o $@ calcServer.o calc.o csapp.o parser.o hash.o -lpthread
 
 # Targets for .o files with correct dependencies.
 # Note that no commands are needed because of the pattern rules above.
@@ -51,6 +51,10 @@ calcInteractive.o : calcInteractive.c calc.h csapp.h
 csapp.o : csapp.c csapp.h
 
 calcServer.o : calcServer.c calc.h csapp.h
+
+parser.o : parser.c parser.h
+
+hash.o : hash.c hash.h
 
 clean :
 	rm -f *.o $(PROGRAMS) solution.zip
