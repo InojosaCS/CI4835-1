@@ -5,7 +5,7 @@
 /* buffer size for reading lines of input from user */
 #define LINEBUF_SIZE 1024
 
-int chat_with_client(struct Calc *calc, int infd, int outfd);
+int chat_with_client(struct Calc *calc, int infd);
 
 int main(int argc, char **argv) {
 	/* TODO: implement this program */
@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr, "Error: cannot accept connection request\n");
 			return -1;
 		}
-		open_session = chat_with_client(calc, conection_request, conection_request);
+		open_session = chat_with_client(calc, conection_request);
 		close(conection_request);
 	} while(open_session);
 
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-int chat_with_client(struct Calc *calc, int infd, int outfd) {
+int chat_with_client(struct Calc *calc, int infd) {
 	char linebuf[LINEBUF_SIZE];
 	char output[LINEBUF_SIZE];
 
@@ -81,11 +81,11 @@ int chat_with_client(struct Calc *calc, int infd, int outfd) {
 				int result = -3;
 
 				if (calc_eval(calc, pch, &result) == 0) {
-					sprintf(output, "%s\n\0", "Error");
+					sprintf(output, "%s\n", "Error");
 					write(infd, output, strlen(output));
 				} else {
 					/* output result */
-					sprintf(output, "%i\n\0", result);
+					sprintf(output, "%i\n", result);
 					write(infd, output, strlen(output));
 				}
 			}
