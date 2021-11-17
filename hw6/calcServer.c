@@ -54,30 +54,42 @@ int chat_with_client(struct Calc *calc, int infd, int outfd) {
 		ssize_t n = recv(infd, (void*) &linebuf, LINEBUF_SIZE, 0);
 
 		linebuf[n] = '\0';
-		printf("'%s'\n", linebuf);
+		//printf("'%s'\n", linebuf);
+
+		char* pch = NULL;
+		pch = strtok(linebuf, "\r\n");
+
+		while (pch != NULL)
+		{
+			//sprintf(output, "-- %s ---\n", pch);
+			//write(infd, output, strlen(output));
 		
-		if(strcmp(linebuf, "shutdown\n") == 0 || strcmp(linebuf, "shutdown\r\n") == 0) {
-			done = 1;
-			return FALSE;
-		}
-		
-		if (n <= 0) {
-			/* error or end of linebuf */
-			done = 1;
-		} else if (strcmp(linebuf, "quit\n") == 0 || strcmp(linebuf, "quit\r\n") == 0) {
-			/* quit command */
-			done = 1;
-		} else {
-			/* process input line */
-			int result;
-			if (calc_eval(calc, linebuf, &result) == 0) {
-				sprintf(output, "%s\n\0", "Error");
-				write(infd, output, strlen(output));
-			} else {
-				/* output result */
-				sprintf(output, "%i\n\0", result);
-				write(infd, output, strlen(output));
+			if(strcmp(pch, "shutdown\n") == 0 || strcmp(pch, "shutdown\r\n") == 0 || strcmp(pch, "shutdown") == 0) {
+				done = 1;
+				return FALSE;
 			}
+			
+			if (n <= 0) {
+				/* error or end of linebuf */
+				done = 1;
+			} else if (strcmp(pch, "quit\n") == 0 || strcmp(pch, "quit\r\n") == 0 || strcmp(pch, "quit") == 0) {
+				/* quit command */
+				done = 1;
+				break;
+			} else {
+				/* process input line */
+				int result = -3;
+
+				if (calc_eval(calc, pch, &result) == 0) {
+					sprintf(output, "%s\n\0", "Error");
+					write(infd, output, strlen(output));
+				} else {
+					/* output result */
+					sprintf(output, "%i\n\0", result);
+					write(infd, output, strlen(output));
+				}
+			}
+			pch = strtok(NULL, "\r\n");
 		}
 	}
 	return TRUE;
