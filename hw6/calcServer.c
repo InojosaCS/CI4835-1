@@ -52,37 +52,34 @@ int chat_with_client(struct Calc *calc, int infd, int outfd) {
 	 */
 	int done = 0;
 	while (!done) {
-		ssize_t n = recv(infd, (void*) &linebuf[LINEBUF_SIZE], LINEBUF_SIZE, 0);
-		input = linebuf;
+		ssize_t n = recv(infd, (void*) linebuf, LINEBUF_SIZE, 0);
+
+		linebuf[strlen(linebuf)-1] = '\0';
+		printf("'%s'\n", linebuf);
 		
-		if(strcmp(input, "shutdown\n") == 0 || strcmp(input, "shutdown\r\n") == 0) {
+		if(strcmp(linebuf, "shutdown\n") == 0 || strcmp(linebuf, "shutdown\r\n") == 0) {
 			done = 1;
 			return FALSE;
 		}
 		
 		if (n <= 0) {
-			/* error or end of input */
+			/* error or end of linebuf */
 			done = 1;
-		} else if (strcmp(input, "quit\n") == 0 || strcmp(input, "quit\r\n") == 0) {
+		} else if (strcmp(linebuf, "quit\n") == 0 || strcmp(linebuf, "quit\r\n") == 0) {
 			/* quit command */
 			done = 1;
 		} else {
 			/* process input line */
 			int result;
-			if (calc_eval(calc, input, &result) == 0) {
-				/* expression couldn't be evaluated */
-				rio_writen(outfd, "Error?\n", 7);
-				sprintf(output, "%s", linebuf);
+			if (calc_eval(calc, linebuf, &result) == 0) {
+				sprintf(output, "%s\n\0", "Error");
 				write(infd, output, strlen(output));
 			} else {
 				/* output result */
-				int len = snprintf(linebuf, LINEBUF_SIZE, "%d\n", result);
-				if (len < LINEBUF_SIZE) {
-					rio_writen(outfd, linebuf, len);
-				}
+				sprintf(output, "%i\n\0", result);
+				write(infd, output, strlen(output));
 			}
 		}
 	}
 	return TRUE;
 }
-
