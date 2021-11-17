@@ -212,18 +212,6 @@ static void rebuild_table(hash_t *tptr) {
    return(data);
  }
  
- 
- /*
-  * inthash_entries() - return the number of hash table entries.
-  *
-  */
- VMDEXTERNSTATIC int hash_entries(hash_t *tptr) {
-   return tptr->entries;
- }
- 
- 
- 
- 
  /*
   * hash_destroy() - Delete the entire table, and all remaining entries.
   * 
@@ -247,42 +235,5 @@ static void rebuild_table(hash_t *tptr) {
      memset(tptr, 0, sizeof(hash_t));
    }
  }
- 
- /*
-  *  alos() - Find the average length of search.
-  *
-  *  tptr: Pointer to a hash table
-  */
- static float alos(hash_t *tptr) {
-   int i,j;
-   float alos=0;
-   hash_node_t *node;
- 
- 
-   for (i=0; i<tptr->size; i++) {
-     for (node=tptr->bucket[i], j=0; node!=NULL; node=node->next, j++);
-     if (j)
-       alos+=((j*(j+1))>>1);
-   } /* for */
- 
-   return(tptr->entries ? alos/tptr->entries : 0);
- }
- 
- 
- /*
-  *  hash_stats() - Return a string with stats about a hash table.
-  *
-  *  tptr: A pointer to the hash table
-  */
- VMDEXTERNSTATIC char * hash_stats(hash_t *tptr) {
-   static char buf[1024];
- 
-   sprintf(buf, "%u slots, %u entries, and %1.2f ALOS",
-     (int)tptr->size, (int)tptr->entries, alos(tptr));
- 
-   return(buf);
- }
- 
- 
  
  

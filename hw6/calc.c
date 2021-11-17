@@ -20,10 +20,11 @@ void calc_destroy(struct Calc **calc) {
 }
 
 /*
-The calc_eval function evaluates an expression stored as a C character string in expr, saving the result of evaluating the expression in the variable pointed to by result. If the evaluation succeeds, calc_eval should return 1. If the evaluation fails because expr is invalid, calc_eval should return 0.
+The calc_eval function evaluates an expression stored as a C character string in expr, saving the result
+ of evaluating the expression in the variable pointed to by result. If the evaluation succeeds, calc_eval 
+ should return 1. If the evaluation fails because expr is invalid, calc_eval should return 0.
 */
 int calc_eval(struct Calc *calc, char *expr, int *result){
-	//printf("%s\n", expr);
 	char (*splittedExpr[5]);
 	for(int i = 0; i < 5; i++) {
 		splittedExpr[i] = (char *) malloc(sizeof(char) * 16);
@@ -52,8 +53,6 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		if(strcmp(splittedExpr[i], "") == 0) null++;
 	}
 
-	//printf("%d aqui\n", is_number(splittedExpr[0]));
-
 	// Operand
 	if(is_operand(splittedExpr[0]) && (null == 4)) {
 		if(is_number(splittedExpr[0])) {
@@ -62,8 +61,6 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		} 
 
 		int value = hash_lookup(calc->table, splittedExpr[0]);
-		//printf("%d here %s\n", hash_lookup(calc->table, splittedExpr[0]), splittedExpr[0]);
-		//printf("%d here %s\n", hash_lookup(calc->table, "hola"), "hola");
 
 		if(value == NF){
 			*result = FALSE;
@@ -105,9 +102,6 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 	// var = operand 
 	if(is_variable(splittedExpr[0]) && is_equal(splittedExpr[1]) && is_operand(splittedExpr[2]) && (null == 2)) {
 		int op2 = NF;
-		//printf("%d here %s\n", hash_lookup(calc->table, splittedExpr[2]), splittedExpr[2]);
-		//printf("%d here %s\n", hash_lookup(calc->table, "hola"), "hola");
-		//printf("%d\n", strcmp(splittedExpr[2], "hola"));
 
 		//getting the value of op2
 		if(is_number(splittedExpr[2])) {
@@ -123,7 +117,6 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		hash_delete(calc->table, splittedExpr[0]);
 		hash_insert(calc->table, splittedExpr[0], op2);
 		*result = op2;
-		//printf("%s = %d\n", splittedExpr[0], op2);
 		return TRUE;
 	}
 
@@ -133,9 +126,6 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		
 		int operand1 = NF;
 		int operand2 = NF;
-
-		//printf("%d here %s\n", hash_lookup(calc->table, splittedExpr[2]), splittedExpr[2]);
-		//printf("%d here %s\n", hash_lookup(calc->table, "hola"), "hola");
 
 		if(is_number(splittedExpr[4])) operand2 = string_to_int(splittedExpr[4]);
 		if(is_number(splittedExpr[2])) operand1 = string_to_int(splittedExpr[2]);
@@ -165,29 +155,3 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 
 	return FALSE;
 }
-
-/*
-int main(int argc, char *argv[]) {
-//	struct Calc *calc = calc_create();
-	struct Calc *calc = calc_create();
-
-	int result = 0;
-
-	calc_eval(calc, "b = 33 - 15", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "b", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "hola = 41 + 3", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "hola", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "hola + 5", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "hola = hola + 3", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "a = hola", &result);
-	printf("%d\n", result);
-	calc_eval(calc, "a = hola", &result);
-	printf("%d\n", result);
-}
-*/

@@ -50,11 +50,7 @@ int hash_insert (hash_t *, const char *, int);
 
 int hash_delete (hash_t *, const char *);
 
-int hash_entries(hash_t *);
-
 void hash_destroy(hash_t *);
-
-char *hash_stats (hash_t *);
 
 #ifdef __cplusplus
 }

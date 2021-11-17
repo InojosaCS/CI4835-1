@@ -13,7 +13,6 @@ int chat_with_client(void *arg);
 void _shutdown();
 
 int main(int argc, char **argv) {
-	/* TODO: implement this program */
 	if(argc != 2){
 	    fprintf(stderr, "Usage: ./calcServer <port>\n");
 		return -1;	
@@ -37,13 +36,7 @@ int main(int argc, char **argv) {
 		}
 
 		pthread_t thread_id;
-
-		// printf("Antes\n");
 		pthread_create(&thread_id, NULL, (void *)chat_with_client, (void *)conection_request);
-		// printf("Despues\n");
-
-		//open_session = chat_with_client(conection_request);
-		//close(conection_request);
 	} while(TRUE);
 
 	return 0;
@@ -77,16 +70,11 @@ int chat_with_client(void *arg) {
 		}
 
 		linebuf[n] = '\0';
-		// printf("'%s'\n", linebuf);
-
 		char* pch = NULL;
 		pch = strtok(linebuf, "\r\n");
-		// printf("AQUI2\n");
+
 		while (pch != NULL)
 		{
-			//sprintf(output, "-- %s ---\n", pch);
-			//write(infd, output, strlen(output));
-		
 			if(strcmp(pch, "shutdown\n") == 0 || strcmp(pch, "shutdown\r\n") == 0 || strcmp(pch, "shutdown") == 0) {
 				close(infd);
 				_shutdown();
@@ -119,7 +107,6 @@ int chat_with_client(void *arg) {
 			pch = strtok(NULL, "\r\n");
 		}
 	}
-	// printf("AQUI\n");
 	return TRUE;
 }
 
