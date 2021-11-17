@@ -9,7 +9,7 @@ typedef struct Calc {
 struct Calc *calc_create(void) {
 	struct Calc * calc = (struct Calc *) malloc(sizeof(struct Calc));	 
 	calc->table = (hash_t *) malloc(sizeof(hash_t));
-	hash_init(calc->table, 32);
+	hash_init(calc->table, 128);
 	
 	return calc;
 }
@@ -23,7 +23,6 @@ void calc_destroy(struct Calc **calc) {
 The calc_eval function evaluates an expression stored as a C character string in expr, saving the result of evaluating the expression in the variable pointed to by result. If the evaluation succeeds, calc_eval should return 1. If the evaluation fails because expr is invalid, calc_eval should return 0.
 */
 int calc_eval(struct Calc *calc, char *expr, int *result){
-	printf("%s***\n", expr);
 	char (*splittedExpr[5]);
 	for(int i = 0; i < 5; i++) {
 		splittedExpr[i] = (char *) malloc(sizeof(char) * 16);
@@ -33,6 +32,9 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 	int i = 0, j = 0, pos = 0;
 
 	for(i = 0; i <= (int) strlen(expr); i++) {
+		if(pos == 5) {
+			break;
+		}
 		if(expr[i] == '\0' || expr[i] == ' ' || expr[i] == '\n') {
 			splittedExpr[pos][j] = '\0';
 			pos++;
@@ -44,7 +46,6 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 	}
 
 	int null = 0;
-	printf("%s %s %s\n", splittedExpr[0], splittedExpr[1], splittedExpr[2]);
 
 	for(i = 0; i < 5; i++) {
 		if(strcmp(splittedExpr[i], "") == 0) null++;
@@ -54,7 +55,7 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 	if(is_operand(splittedExpr[0]) && (null == 4)) {
 		if(is_number(splittedExpr[0])) {
 			*result = string_to_int(splittedExpr[0]);
-			return *result;
+			return TRUE;
 		} 
 
 		int value = hash_lookup(calc->table, splittedExpr[0]);
@@ -67,7 +68,7 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		} 
 
 		*result = value;
-		return value;
+		return TRUE;
 	} 
 
 	// operand op operand
@@ -95,7 +96,7 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		if(strcmp(splittedExpr[1], "*") == 0) *result = operand1 * operand2;
 		if(strcmp(splittedExpr[1], "/") == 0) *result = operand1 / operand2;
 
-		return *result;
+		return TRUE;
 	}
 
 	// var = operand 
@@ -118,8 +119,9 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 
 		hash_delete(calc->table, splittedExpr[0]);
 		hash_insert(calc->table, splittedExpr[0], op2);
+		*result = op2;
 		//printf("%s = %d\n", splittedExpr[0], op2);
-		return *result = op2;
+		return TRUE;
 	}
 
 	// var = operand op operand
@@ -155,7 +157,7 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 
 		hash_delete(calc->table, splittedExpr[0]);
 		hash_insert(calc->table, splittedExpr[0], *result);
-		return *result;
+		return TRUE;
 	}
 
 	return FALSE;

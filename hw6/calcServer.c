@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 }
 
 int chat_with_client(struct Calc *calc, int infd, int outfd) {
-	char linebuf[LINEBUF_SIZE];
+	char linebuf[LINEBUF_SIZE] = "lol";
 	char output[LINEBUF_SIZE];
 	char * input = (char *) malloc(sizeof(char) * LINEBUF_SIZE);
 
@@ -52,9 +52,9 @@ int chat_with_client(struct Calc *calc, int infd, int outfd) {
 	 */
 	int done = 0;
 	while (!done) {
-		ssize_t n = recv(infd, (void*) linebuf, LINEBUF_SIZE, 0);
+		ssize_t n = recv(infd, (void*) &linebuf, LINEBUF_SIZE, 0);
 
-		linebuf[strlen(linebuf)-1] = '\0';
+		linebuf[n] = '\0';
 		printf("'%s'\n", linebuf);
 		
 		if(strcmp(linebuf, "shutdown\n") == 0 || strcmp(linebuf, "shutdown\r\n") == 0) {
