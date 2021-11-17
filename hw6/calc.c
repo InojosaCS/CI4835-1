@@ -23,6 +23,7 @@ void calc_destroy(struct Calc **calc) {
 The calc_eval function evaluates an expression stored as a C character string in expr, saving the result of evaluating the expression in the variable pointed to by result. If the evaluation succeeds, calc_eval should return 1. If the evaluation fails because expr is invalid, calc_eval should return 0.
 */
 int calc_eval(struct Calc *calc, char *expr, int *result){
+	printf("%s\n", expr);
 	char (*splittedExpr[5]);
 	for(int i = 0; i < 5; i++) {
 		splittedExpr[i] = (char *) malloc(sizeof(char) * 16);
@@ -35,7 +36,7 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 		if(pos == 5) {
 			break;
 		}
-		if(expr[i] == '\0' || expr[i] == ' ' || expr[i] == '\n') {
+		if(expr[i] == '\0' || expr[i] == ' ' || expr[i] == '\n' || expr[i] == '\r') {
 			splittedExpr[pos][j] = '\0';
 			pos++;
 			j = 0;
@@ -50,6 +51,8 @@ int calc_eval(struct Calc *calc, char *expr, int *result){
 	for(i = 0; i < 5; i++) {
 		if(strcmp(splittedExpr[i], "") == 0) null++;
 	}
+
+	printf("%d aqui\n", is_number(splittedExpr[0]));
 
 	// Operand
 	if(is_operand(splittedExpr[0]) && (null == 4)) {

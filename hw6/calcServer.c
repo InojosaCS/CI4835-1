@@ -7,7 +7,6 @@
 
 int chat_with_client(struct Calc *calc, int infd, int outfd);
 
-
 int main(int argc, char **argv) {
 	/* TODO: implement this program */
 	if(argc != 2){
@@ -41,9 +40,8 @@ int main(int argc, char **argv) {
 }
 
 int chat_with_client(struct Calc *calc, int infd, int outfd) {
-	char linebuf[LINEBUF_SIZE] = "lol";
+	char linebuf[LINEBUF_SIZE];
 	char output[LINEBUF_SIZE];
-	char * input = (char *) malloc(sizeof(char) * LINEBUF_SIZE);
 
 	/*
 	 * Read lines of input, evaluate them as calculator expressions,
@@ -52,6 +50,7 @@ int chat_with_client(struct Calc *calc, int infd, int outfd) {
 	 */
 	int done = 0;
 	while (!done) {
+		memset(linebuf, '\0', sizeof(linebuf));
 		ssize_t n = recv(infd, (void*) &linebuf, LINEBUF_SIZE, 0);
 
 		linebuf[n] = '\0';
