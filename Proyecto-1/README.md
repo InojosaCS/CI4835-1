@@ -1,8 +1,8 @@
 # **CI4835 - Redes de Computadoras I - Proyecto 1**
 
 ## **Autores**
- * *Alejandro Salazar*
- * *Cristian Inojosa*
+ * *Alejandro Salazar, 1611080*
+ * *Cristian Inojosa, 1710285*
 
 ## **Descripción**
 
