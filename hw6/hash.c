@@ -1,24 +1,8 @@
-/***************************************************************************
- *cr
- *cr            (C) Copyright 1995-2016 The Board of Trustees of the
- *cr                        University of Illinois
- *cr                         All Rights Reserved
- *cr
- ***************************************************************************/
-
-/***************************************************************************
- * RCS INFORMATION:
- *
- *      $RCSfile: hash.c,v $
- *      $Author: johns $        $Locker:  $             $State: Exp $
- *      $Revision: 1.7 $      $Date: 2016/11/28 05:01:54 $
- *
- ***************************************************************************
- * DESCRIPTION:
- *   A simple hash table implementation for strings, contributed by John Stone,
- *   derived from his ray tracer code.
- ***************************************************************************/
-
+/* 
+ * Implementation of the hash table.
+ * largely based on the hash table in 
+ * https://www.ks.uiuc.edu/Research/vmd/plugins/doxygen/hash_8c-source.html
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,13 +26,11 @@ static int hash(const hash_t *tptr, const char *key) {
   int i=0;
   int hashvalue;
  
-  while (*key != '\0')
-    i=(i<<3)+(*key++ - '0');
+  while (*key != '\0') i=(i<<3)+(*key++ - '0');
  
   hashvalue = (((i*1103515249)>>tptr->downshift) & tptr->mask);
-  if (hashvalue < 0) {
-    hashvalue = 0;
-  }    
+  if (hashvalue < 0) hashvalue = 0;
+  
 
   return hashvalue;
 }
@@ -61,8 +43,7 @@ static int hash(const hash_t *tptr, const char *key) {
  */
 VMDEXTERNSTATIC void hash_init(hash_t *tptr, int buckets) {
   /* make sure we allocate something */
-  if (buckets==0)
-    buckets=16;
+  if (buckets==0) buckets=32;
 
   /* initialize the table */
   tptr->entries=0;

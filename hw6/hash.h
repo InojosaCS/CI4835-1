@@ -1,23 +1,8 @@
-/***************************************************************************
- *cr
- *cr            (C) Copyright 1995-2016 The Board of Trustees of the
- *cr                        University of Illinois
- *cr                         All Rights Reserved
- *cr
- ***************************************************************************/
-
-/***************************************************************************
- * RCS INFORMATION:
- *
- *      $RCSfile: hash.h,v $
- *      $Author: johns $        $Locker:  $             $State: Exp $
- *      $Revision: 1.9 $      $Date: 2016/11/28 05:01:54 $
- *
- ***************************************************************************
- * DESCRIPTION:
- *   A simple hash table implementation for strings, contributed by John Stone,
- *   derived from his ray tracer code.
- ***************************************************************************/
+/* 
+ * Implementation of the hash table.
+ * largely based on the hash table in 
+ * https://www.ks.uiuc.edu/Research/vmd/plugins/doxygen/hash_8c-source.html
+ */
 #ifndef HASH_H
 #define HASH_H
 

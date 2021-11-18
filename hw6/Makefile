@@ -57,4 +57,4 @@ parser.o : parser.c parser.h
 hash.o : hash.c hash.h
 
 clean :
-	rm -f *.o *.txt *.out *.sh $(PROGRAMS) solution.zip
+	rm -f *.o *.out $(PROGRAMS) solution.zip

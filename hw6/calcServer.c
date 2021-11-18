@@ -42,6 +42,12 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
+/*
+ * chat_with_client: handle a client connection
+
+ * @arg: the file descriptor of the client connection
+ * @return: 0 if the client connection is closed, 1 otherwise
+ * */
 int chat_with_client(void *arg) {
 	int infd = (int) arg;
 
@@ -70,9 +76,15 @@ int chat_with_client(void *arg) {
 		}
 
 		linebuf[n] = '\0';
+		/* pch is a pointer to the token in the linebuf splitted by lines */
 		char* pch = NULL;
 		pch = strtok(linebuf, "\r\n");
 
+		/*
+		 * If the line is empty, ignore it.
+		 * If the line is "quit", quit.
+		 * Otherwise, evaluate the line as a calculator expression.
+		 */
 		while (pch != NULL)
 		{
 			if(strcmp(pch, "shutdown\n") == 0 || strcmp(pch, "shutdown\r\n") == 0 || strcmp(pch, "shutdown") == 0) {
@@ -110,6 +122,9 @@ int chat_with_client(void *arg) {
 	return TRUE;
 }
 
+/*
+ * _shutdown: shutdown the server
+ * */
 void _shutdown() {
 	pthread_mutex_destroy(&lock);
 	calc_destroy(calc);
